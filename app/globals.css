@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   JRS Civil Works Ltd — design tokens
+   Navy / charcoal / steel teal on white and light gray. No gradients.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-navy: #0a2540;
+  --color-navy-700: #123457;
+  --color-navy-900: #061829;
+  --color-charcoal: #34383c;
+  --color-charcoal-600: #4d5257;
+  --color-teal: #257c8f;
+  --color-teal-600: #1e6675;
+  --color-teal-300: #7fb3bf;
+  --color-mist: #f4f6f7;
+  --color-line: #e2e7ea;
+
+  --font-display: var(--font-barlow-condensed), "Barlow Condensed",
+    "Arial Narrow", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), "Manrope", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --spacing-section: 6rem;
+}
+
+@layer base {
+  html {
+    /* `clip` rather than `hidden`: it contains the few pixels of horizontal
+       travel in slide-in reveals without creating a scroll container, so
+       position: sticky and smooth anchor scrolling keep working. Set on both
+       html and body, since the viewport scroll is governed by html. */
+    overflow-x: clip;
+    scroll-behavior: smooth;
+    /* Keep anchor targets clear of the fixed header. */
+    scroll-padding-top: 6.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    /* `clip` rather than `hidden`: it contains the few pixels of horizontal
+       travel in slide-in reveals without creating a scroll container, so
+       position: sticky and smooth anchor scrolling keep working. */
+    overflow-x: clip;
+    background-color: #ffffff;
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-navy);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  ::selection {
+    background: var(--color-teal);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Respect the reader's motion preference across every animated element. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Every scroll-reveal carries `data-reveal`. The server renders those
+       elements at their `hidden` variant — opacity 0, offset by a few pixels —
+       because the motion preference is only knowable in the browser. This rule
+       lands with the first paint and pins them to their final state, so a
+       reader with reduced motion can never be left looking at a blank page if
+       the JavaScript is slow, blocked or absent. */
+    [data-reveal] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}
+
+@layer components {
+  /* Eyebrow label: small, wide-tracked, teal. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  /* Section index numeral, e.g. 01 / 02 / 03. */
+  .section-index {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Body copy inside editorial blocks. */
+  .prose-jrs p {
+    color: var(--color-charcoal-600);
+    line-height: 1.75;
+  }
+
+  .prose-jrs p + p {
+    margin-top: 1.125rem;
+  }
+}
+
+@layer utilities {
+  /* Thin structural rule used to open sections. */
+  .rule-teal {
+    display: block;
+    height: 3px;
+    width: 4rem;
+    background-color: var(--color-teal);
+  }
+
+  /* Faint stacked-chevron field, echoing the JRS symbol. Used behind
+     large navy panels and a few light sections. */
+  .bg-stack {
+    background-image: url("/brand/stack-navy.svg");
+    background-repeat: repeat;
+    background-size: 132px 132px;
+  }
+
+  .bg-stack-inverse {
+    background-image: url("/brand/stack-white.svg");
+    background-repeat: repeat;
+    background-size: 132px 132px;
+  }
+
+  /* Very slow horizontal drift for stacked-pattern backdrops. Disabled
+     automatically under prefers-reduced-motion by the base layer. */
+  .bg-stack-drift {
+    animation: stack-drift 90s linear infinite;
+  }
+
+  @keyframes stack-drift {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 132px 132px;
+    }
+  }
+
+  /* Fine engineering grid, for light structural backgrounds. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(10, 37, 64, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 37, 64, 0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

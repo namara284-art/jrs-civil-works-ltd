@@ -1,0 +1,4 @@
+# Original high-resolution photography and the profile PDF are kept in the
+# repository for future re-cropping, but they are never served by the site.
+# Excluding them keeps deployment uploads small.
+source-assets

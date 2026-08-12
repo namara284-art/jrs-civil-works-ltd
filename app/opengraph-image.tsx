@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { siteConfig } from "@/site.config";
 
@@ -9,9 +11,16 @@ export const contentType = "image/png";
  * Social share card used by LinkedIn, WhatsApp, Facebook and X.
  *
  * Drawn rather than photographed so it stays legible at thumbnail size: navy
- * field, the stacked chevron motif, the wordmark and the tagline.
+ * field, the stacked chevron motif, the real logo lockup and the tagline. The
+ * logo is inlined as a data URI because the renderer cannot fetch from the
+ * site's own origin while the response is still being generated.
  */
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
+  const logo = await readFile(
+    join(process.cwd(), "public", "brand", "jrs-logo-white.png"),
+  );
+  const logoSrc = `data:image/png;base64,${logo.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -41,40 +50,8 @@ export default function OpengraphImage() {
           </g>
         </svg>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <svg width="76" height="98" viewBox="0 0 132 168">
-            <g fill="none" strokeWidth={11} strokeLinejoin="miter">
-              <path d="M16 40 L66 14 L116 40" stroke="#FFFFFF" />
-              <path d="M16 74 L66 48 L116 74" stroke="#7FB3BF" />
-              <path d="M16 108 L66 82 L116 108" stroke="#FFFFFF" />
-              <path d="M34 132 L66 152 L98 132" stroke="#257C8F" />
-            </g>
-          </svg>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                fontSize: 74,
-                fontWeight: 800,
-                color: "#FFFFFF",
-                letterSpacing: -2,
-                lineHeight: 1,
-              }}
-            >
-              JRS
-            </div>
-            <div
-              style={{
-                fontSize: 25,
-                fontWeight: 600,
-                color: "#7FB3BF",
-                letterSpacing: 7,
-                marginTop: 8,
-              }}
-            >
-              CIVIL WORKS LTD
-            </div>
-          </div>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={logoSrc} width={324} height={140} alt="" />
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ width: 96, height: 6, backgroundColor: "#257C8F" }} />
